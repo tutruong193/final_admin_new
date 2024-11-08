@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="semi_transparent_gray">#999999a8</color>
+    <!-- Primary Color -->
+    <color name="colorPrimary">#3F51B5</color> <!-- Xanh dương đậm -->
+    <color name="colorPrimaryDark">#303F9F</color> <!-- Xanh dương rất đậm -->
+    <color name="colorAccent">#FF4081</color> <!-- Hồng đậm -->
+
+    <!-- Background Colors -->
+    <color name="colorLightGray">#F5F5F5</color> <!-- Xám nhạt -->
+    <color name="colorGray">#B0BEC5</color> <!-- Xám trung bình -->
+    <color name="colorDarkGray">#607D8B</color> <!-- Xám đậm -->
+    <color name="colorText">#212121</color> <!-- Màu chữ đen nhạt -->
+    <color name="colorError">#F44336</color> <!-- Màu đỏ cho thông báo lỗi -->
+    <color name="gray_50">#FAFAFA</color>
+    <color name="gray_100">#F5F5F5</color>
+    <color name="gray_200">#EEEEEE</color>
+    <color name="gray_300">#E0E0E0</color>
+    <color name="gray_400">#BDBDBD</color>
+    <color name="gray_500">#9E9E9E</color>
+    <color name="gray_600">#757575</color>
+    <color name="gray_700">#616161</color>
+    <color name="gray_800">#424242</color>
+    <color name="gray_900">#212121</color>
+</resources>
