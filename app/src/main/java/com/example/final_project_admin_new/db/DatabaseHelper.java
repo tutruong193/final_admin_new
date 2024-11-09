@@ -149,10 +149,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // Lấy tất cả các class instance của một yoga class
-    public List<ClassInstance> getClassInstancesByClassId(int classId) {
+    public List<ClassInstance> getClassInstances() {
         List<ClassInstance> classInstanceList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_CLASS_INSTANCE, null, COLUMN_CLASS_ID + " = ?", new String[]{String.valueOf(classId)}, null, null, null);
+        Cursor cursor = db.query(TABLE_CLASS_INSTANCE, null, null, null, null, null, null);
 
         if (cursor.moveToFirst()) {
             do {
@@ -162,12 +162,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_INSTANCE_COMMENTS)),
                         cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_CLASS_ID))
                 );
+                instance.setId(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_INSTANCE_ID)));
                 classInstanceList.add(instance);
             } while (cursor.moveToNext());
         }
         cursor.close();
         return classInstanceList;
     }
+
 
     // Xóa một class instance
     public void deleteClassInstance(int instanceId) {

@@ -45,5 +45,16 @@
 
         app:srcCompat="@drawable/baseline_add_24"
         app:tint="@color/white" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnManageInstance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:layout_margin="16dp"
+        android:contentDescription="Manage Class Instances"
+        app:backgroundTint="@color/black"
+        app:fabSize="normal"
+        app:srcCompat="@drawable/baseline_instance_24"
+    app:tint="@color/white" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

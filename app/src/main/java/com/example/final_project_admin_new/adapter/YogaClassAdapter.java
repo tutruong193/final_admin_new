@@ -115,8 +115,4 @@ public class YogaClassAdapter extends RecyclerView.Adapter<YogaClassAdapter.View
             btnDelete = itemView.findViewById(R.id.btnDelete); // Thêm dòng này để ánh xạ btnDelete
         }
     }
-    public void addYogaClass(YogaClass yogaClass) {
-        yogaClassList.add(yogaClass);
-        notifyItemInserted(yogaClassList.size() - 1); // Thông báo rằng một mục mới đã được thêm vào
-    }
 }
