@@ -35,7 +35,7 @@ public class MainActivity2 extends AppCompatActivity {
     private FloatingActionButton btnAdd;
     private LinearLayout backToYogaClassesLayout;
     private int classId;
-    private TextView yogaClassTitle,yogaClassDetails, searchBtn;
+    private TextView yogaClassTitle,yogaClassDetails, noDataText  ;
     private TextInputEditText searchInput;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,9 +52,17 @@ public class MainActivity2 extends AppCompatActivity {
         classId = getIntent().getIntExtra("CLASS_ID", -1);
         // Khởi tạo DatabaseHelper
         dbHelper = new DatabaseHelper(this);
-
         // Lấy tất cả các lớp yoga từ cơ sở dữ liệu
         classInstanceList = dbHelper.getClassInstancesByClassId(classId);
+
+        noDataText = findViewById(R.id.noDataText);
+        if (classInstanceList.isEmpty()) {
+            noDataText.setVisibility(View.VISIBLE); // Hiển thị thông báo "No data"
+            recyclerView.setVisibility(View.GONE); // Ẩn RecyclerView
+        } else {
+            noDataText.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
 
         // Khởi tạo Adapter với dữ liệu
         classInstanceAdapter = new ClassInstanceAdapter(this, classInstanceList, dbHelper);
@@ -135,14 +143,22 @@ public class MainActivity2 extends AppCompatActivity {
                 String teacher = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_INSTANCE_TEACHER));
                 String comment = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_INSTANCE_COMMENTS));
                 int yogaclassId = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_CLASS_ID));
-
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_INSTANCE_ID));
                 // Thêm vào danh sách kết quả
-                ClassInstance classInstance = new ClassInstance(date, teacher, comment, yogaclassId);
+                ClassInstance classInstance = new ClassInstance(id, date, teacher, comment, yogaclassId);
                 searchResults.add(classInstance);
             } while (cursor.moveToNext());
             cursor.close();
         }
-
+        noDataText = findViewById(R.id.noDataText);
+        if (searchResults.isEmpty()) {
+            noDataText.setText("No data found");
+            noDataText.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        } else {
+            noDataText.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
         // Cập nhật Adapter với dữ liệu mới
         classInstanceAdapter.setClassInstances(searchResults);
     }

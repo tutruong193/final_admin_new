@@ -15,7 +15,13 @@ public class ClassInstance {
         this.comments = comments;
         this.classId = classId;
     }
-
+    public ClassInstance(int id, String date, String teacher, String comments, int classId) {
+        this.date = date;
+        this.teacher = teacher;
+        this.comments = comments;
+        this.classId = classId;
+        this.id = id;
+    }
     // Getter và Setter cho các thuộc tính
     public int getId() {
         return id;

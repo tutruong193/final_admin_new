@@ -50,7 +50,7 @@ public class YogaClassAdapter extends RecyclerView.Adapter<YogaClassAdapter.View
         holder.tvCapacity.setText("Capacity: " + yogaClass.getCapacity());
         holder.tvDuration.setText("Duration: " + yogaClass.getDuration() + " mins");
         holder.tvPrice.setText("Price: £" + yogaClass.getPrice());
-        holder.tvDescription.setText("Description: " + yogaClass.getDescription());
+        holder.tvDescription.setText("Comment: " + (yogaClass.getDescription() != null && !yogaClass.getDescription().isEmpty() ? yogaClass.getDescription() : "None"));
 
         // Thêm sự kiện click để xóa lớp yoga
         holder.btnDelete.setOnClickListener(new View.OnClickListener() {
