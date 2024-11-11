@@ -1,7 +1,8 @@
 plugins {
-    alias(libs.plugins.android.application)
     id("com.google.gms.google-services")
+    id("com.android.application")
 }
+
 
 android {
     namespace = "com.example.final_project_admin_new"
@@ -37,7 +38,7 @@ android {
 
 dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
-    implementation("com.google.firebase:firebase-database")
+    implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.android.material:material:1.9.0")
     implementation(libs.appcompat)
     implementation(libs.material)
@@ -50,5 +51,5 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-
+    implementation("com.google.firebase:firebase-database")
 }

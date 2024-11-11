@@ -25,9 +25,10 @@ public class SplashAcitivity extends AppCompatActivity {
         FirebaseApp.initializeApp(this);
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("message");
+        DatabaseReference myRef = database.getReference("them");
 
-        myRef.setValue("Hello, World!");
+        myRef.setValue("thanh cong");
+
         setContentView(R.layout.activity_splash_acitivity);
         View loadingImage = findViewById(R.id.loadingImage);
         View loginForm = findViewById(R.id.loginForm);

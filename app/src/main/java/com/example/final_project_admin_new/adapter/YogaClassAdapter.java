@@ -49,7 +49,7 @@ public class YogaClassAdapter extends RecyclerView.Adapter<YogaClassAdapter.View
         holder.tvTime.setText("Time: " + yogaClass.getTime());
         holder.tvCapacity.setText("Capacity: " + yogaClass.getCapacity());
         holder.tvDuration.setText("Duration: " + yogaClass.getDuration() + " mins");
-        holder.tvPrice.setText("Price: £" + yogaClass.getPrice());
+        holder.tvPrice.setText("Price: $" + yogaClass.getPrice());
         holder.tvDescription.setText("Comment: " + (yogaClass.getDescription() != null && !yogaClass.getDescription().isEmpty() ? yogaClass.getDescription() : "None"));
 
         // Thêm sự kiện click để xóa lớp yoga
@@ -94,7 +94,7 @@ public class YogaClassAdapter extends RecyclerView.Adapter<YogaClassAdapter.View
                 YogaClass yogaClassToDelete = yogaClassList.get(position);
 
                 // Delete from the database
-                databaseHelper.deleteYogaClass(yogaClassToDelete.getId()); // Assuming there's a deleteYogaClass method in your database helper
+                databaseHelper.deleteYogaClass(yogaClassToDelete.getId(), context); // Assuming there's a deleteYogaClass method in your database helper
                 yogaClassList.remove(position);
                 notifyItemRemoved(position);
                 Toast.makeText(context, "Class deleted successfully", Toast.LENGTH_SHORT).show();

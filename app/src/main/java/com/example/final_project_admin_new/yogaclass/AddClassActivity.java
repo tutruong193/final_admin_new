@@ -89,7 +89,7 @@ public class AddClassActivity extends AppCompatActivity {
                         );
 
                         // Thêm lớp vào cơ sở dữ liệu
-                        DB.addYogaClass(yogaClass);
+                        DB.addYogaClass(yogaClass, this);
                         Toast.makeText(this, "Added class successfully!", Toast.LENGTH_SHORT).show();
 
                         // Quay lại MainActivity

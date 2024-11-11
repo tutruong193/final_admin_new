@@ -3,18 +3,25 @@ package com.example.final_project_admin_new.db;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.widget.Toast;
 
 import com.example.final_project_admin_new.model.ClassInstance;
 import com.example.final_project_admin_new.model.YogaClass;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
+    private DatabaseReference mDatabase;
+
     private static final String DATABASE_NAME = "YogaClassDB";
     private static final int DATABASE_VERSION = 1;
     //yoga class
@@ -40,6 +47,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
     }
 
     @Override
@@ -74,7 +82,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // yoga class
-    public void addYogaClass(YogaClass yogaClass) {
+    public void addYogaClass(YogaClass yogaClass,  Context context) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_DAY_OF_WEEK, yogaClass.getDayOfWeek());
@@ -112,9 +120,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return yogaClassList;
     }
 
-    public void deleteYogaClass(int id) {
+    public void deleteYogaClass(int id, Context context) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_YOGA_CLASS, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});
+        if (checkInternetConnection(context)) {
+            mDatabase.child("yoga_classes").child(String.valueOf(id)).removeValue();
+        }
     }
 
     public Cursor getClassDetails(int classId) {
@@ -248,6 +259,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String query = "SELECT * FROM " + TABLE_CLASS_INSTANCE + " WHERE " + COLUMN_INSTANCE_TEACHER + " LIKE ?";
         return db.rawQuery(query, new String[]{"%" + teacherName + "%"});
     }
+
+    //check internet
+    private boolean checkInternetConnection(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+    }
+
 
 }
 
