@@ -1,19 +1,16 @@
-package com.example.final_project_admin_new;
+package com.example.final_project_admin_new.yogaclass;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
+import android.widget.LinearLayout;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.final_project_admin_new.instance.MainActivity2;
+import com.example.final_project_admin_new.R;
 import com.example.final_project_admin_new.adapter.YogaClassAdapter;
 import com.example.final_project_admin_new.db.DatabaseHelper;
 import com.example.final_project_admin_new.model.YogaClass;
@@ -27,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private YogaClassAdapter yogaClassAdapter;
     private List<YogaClass> yogaClassList;
     private DatabaseHelper dbHelper;
-    private FloatingActionButton btnAdd, btnManageInstance;
+    private FloatingActionButton btnAdd;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         btnAdd = findViewById(R.id.btnAdd);  // Correct casting
-        btnManageInstance = findViewById(R.id.btnManageInstance);
 
         // Khởi tạo DatabaseHelper
         dbHelper = new DatabaseHelper(this);
@@ -55,13 +51,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, AddClassActivity.class);
-                startActivity(intent);
-            }
-        });
-        btnManageInstance.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, MainActivity2.class);
                 startActivity(intent);
             }
         });

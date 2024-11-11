@@ -161,12 +161,12 @@
 
         <!-- Save Button -->
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/saveButton"
+            android:id="@+id/updateBtn"
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:layout_marginStart="8dp"
             android:layout_weight="1"
-            android:text="Save Class"
+            android:text="Update"
             android:textSize="16sp"/>
     </LinearLayout>
 

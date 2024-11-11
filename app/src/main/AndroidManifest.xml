@@ -13,16 +13,19 @@
         android:theme="@style/Theme.Final_project_admin_new"
         tools:targetApi="31" >
         <activity
-            android:name=".AddClassInstance"
+            android:name=".instance.DetailInstance"
             android:exported="false" />
         <activity
-            android:name=".MainActivity2"
+            android:name=".instance.AddClassInstance"
             android:exported="false" />
         <activity
-            android:name=".DetailActivity"
+            android:name=".instance.MainActivity2"
             android:exported="false" />
         <activity
-            android:name=".AddClassActivity"
+            android:name=".yogaclass.DetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".yogaclass.AddClassActivity"
             android:exported="false" />
         <activity
             android:name=".SplashAcitivity"
@@ -34,7 +37,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".yogaclass.MainActivity"
+            android:exported="true" />
+        <activity
+            android:name=".TestActivity"
             android:exported="true" />
     </application>
 

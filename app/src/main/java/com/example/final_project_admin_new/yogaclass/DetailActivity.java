@@ -1,4 +1,4 @@
-package com.example.final_project_admin_new;
+package com.example.final_project_admin_new.yogaclass;
 
 import android.app.TimePickerDialog;
 import android.content.Intent;
@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.final_project_admin_new.R;
 import com.example.final_project_admin_new.db.DatabaseHelper;
 
 import java.util.Calendar;

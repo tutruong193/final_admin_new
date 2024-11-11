@@ -1,99 +1,187 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/class_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="30dp"
-    app:cardElevation="8dp"
-    app:cardCornerRadius="12dp"
-    app:cardBackgroundColor="@color/white"
     android:clickable="true"
     android:focusable="true"
-    android:id="@+id/class_card"
-    android:foreground="?android:attr/selectableItemBackground">
+    android:foreground="?android:attr/selectableItemBackground"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="8dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <!-- Nút Delete, sẽ được căn ở góc trên bên phải -->
-
-        <!-- LinearLayout chứa thông tin lớp yoga -->
-        <ImageButton
-            android:id="@+id/btnDelete"
-            android:layout_width="36dp"
-            android:layout_height="28dp"
-            android:layout_alignParentTop="true"
+        <!-- Action buttons container -->
+        <LinearLayout
+            android:id="@+id/actionButtonsContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="17dp"
-            android:layout_marginEnd="2dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Delete"
-            android:src="@drawable/baseline_delete_24" />
+            android:layout_alignParentTop="true"
+            android:orientation="horizontal"
+            android:padding="8dp">
 
+            <ImageButton
+                android:id="@+id/btnEdit"
+                android:layout_width="36dp"
+                android:layout_height="28dp"
+                android:layout_marginEnd="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Edit"
+                android:src="@drawable/baseline_edit_24"
+                app:tint="#2196F3" />
+
+            <ImageButton
+                android:id="@+id/btnDelete"
+                android:layout_width="36dp"
+                android:layout_height="28dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Delete"
+                android:src="@drawable/baseline_delete_24"
+                app:tint="#FF5722" />
+        </LinearLayout>
+
+        <!-- Content container -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_toStartOf="@id/actionButtonsContainer"
             android:orientation="vertical"
-            android:padding="16dp"
-            android:layout_toStartOf="@id/btnDelete">
+            android:padding="16dp">
 
             <TextView
                 android:id="@+id/tvClassType"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingBottom="8dp"
                 android:text="Class Type"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textStyle="bold"
-                android:paddingBottom="4dp" />
+                android:textColor="#1A237E"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/tvDayOfWeek"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Day"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:paddingBottom="4dp" />
+                android:orientation="horizontal"
+                android:paddingBottom="4dp">
 
-            <TextView
-                android:id="@+id/tvTime"
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/baseline_calendar_today_24"
+                    app:tint="#757575" />
+
+                <TextView
+                    android:id="@+id/tvDayOfWeek"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="Day"
+                    android:textColor="#424242" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Time"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:paddingBottom="4dp" />
+                android:orientation="horizontal"
+                android:paddingBottom="4dp">
 
-            <TextView
-                android:id="@+id/tvCapacity"
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/baseline_access_time_24"
+                    app:tint="#757575" />
+
+                <TextView
+                    android:id="@+id/tvTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="Time"
+                    android:textColor="#424242" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Capacity"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:paddingBottom="4dp" />
+                android:orientation="horizontal"
+                android:paddingBottom="4dp">
 
-            <TextView
-                android:id="@+id/tvDuration"
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/baseline_group_24"
+                    app:tint="#757575" />
+
+                <TextView
+                    android:id="@+id/tvCapacity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="Capacity"
+                    android:textColor="#424242" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Duration"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:paddingBottom="4dp" />
+                android:orientation="horizontal"
+                android:paddingBottom="4dp">
 
-            <TextView
-                android:id="@+id/tvPrice"
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/baseline_timer_24"
+                    app:tint="#757575" />
+
+                <TextView
+                    android:id="@+id/tvDuration"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="Duration"
+                    android:textColor="#424242" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Price"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:paddingBottom="4dp" />
+                android:orientation="horizontal"
+                android:paddingBottom="4dp">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/baseline_attach_money_24"
+                    app:tint="#757575" />
+
+                <TextView
+                    android:id="@+id/tvPrice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="Price"
+                    android:textColor="#424242" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tvDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:text="Description"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:paddingBottom="4dp" />
+                android:textColor="#616161"
+                android:textStyle="italic" />
 
         </LinearLayout>
 

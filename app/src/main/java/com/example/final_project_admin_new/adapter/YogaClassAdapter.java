@@ -14,7 +14,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.final_project_admin_new.DetailActivity;
+import com.example.final_project_admin_new.instance.MainActivity2;
+import com.example.final_project_admin_new.yogaclass.DetailActivity;
 import com.example.final_project_admin_new.R;
 import com.example.final_project_admin_new.db.DatabaseHelper;
 import com.example.final_project_admin_new.model.YogaClass;
@@ -62,6 +63,17 @@ public class YogaClassAdapter extends RecyclerView.Adapter<YogaClassAdapter.View
             public void onClick(View v) {
                 int pos = holder.getAdapterPosition();
                 if (pos != RecyclerView.NO_POSITION) {
+                    YogaClass yogaClass = yogaClassList.get(pos);  // Lấy lớp Yoga ở vị trí hiện tại
+                    Intent intent = new Intent(context, MainActivity2.class);  // Chuyển tới ClassInstanceActivity
+                    intent.putExtra("CLASS_ID", yogaClass.getId());  // Truyền ID lớp yoga
+                    context.startActivity(intent);
+                }
+            }
+        });
+        holder.btnEdit.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                int pos = holder.getAdapterPosition();
+                if (pos != RecyclerView.NO_POSITION) {
                     YogaClass yogaClass = yogaClassList.get(pos);  // Get the YogaClass at the current position
                     Intent intent = new Intent(context, DetailActivity.class);
                     intent.putExtra("CLASS_ID", yogaClass.getId());  // Pass the class ID
@@ -99,7 +111,7 @@ public class YogaClassAdapter extends RecyclerView.Adapter<YogaClassAdapter.View
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvClassType, tvDayOfWeek, tvTime, tvCapacity, tvDuration, tvPrice, tvDescription;
-        ImageButton btnDelete;
+        ImageButton btnDelete, btnEdit;
         CardView classCard;
 
         public ViewHolder(View itemView) {
@@ -112,7 +124,8 @@ public class YogaClassAdapter extends RecyclerView.Adapter<YogaClassAdapter.View
             tvDuration = itemView.findViewById(R.id.tvDuration);
             tvPrice = itemView.findViewById(R.id.tvPrice);
             tvDescription = itemView.findViewById(R.id.tvDescription);
-            btnDelete = itemView.findViewById(R.id.btnDelete); // Thêm dòng này để ánh xạ btnDelete
+            btnDelete = itemView.findViewById(R.id.btnDelete);
+            btnEdit = itemView.findViewById(R.id.btnEdit);// Thêm dòng này để ánh xạ btnDelete
         }
     }
 }

@@ -1,12 +1,9 @@
-package com.example.final_project_admin_new;
+package com.example.final_project_admin_new.yogaclass;
 
 import android.app.TimePickerDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -19,10 +16,11 @@ import androidx.activity.EdgeToEdge;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.example.final_project_admin_new.R;
 import com.example.final_project_admin_new.db.DatabaseHelper;
 import com.example.final_project_admin_new.model.YogaClass;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
+
 import java.util.Calendar;
 
 public class AddClassActivity extends AppCompatActivity {
@@ -33,7 +31,6 @@ public class AddClassActivity extends AppCompatActivity {
     DatabaseHelper DB;
     private boolean isPickedTime;
     AutoCompleteTextView dayOfWeek, classType;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

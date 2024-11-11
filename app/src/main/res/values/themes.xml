@@ -6,4 +6,17 @@
     </style>
 
     <style name="Theme.Final_project_admin_new" parent="Base.Theme.Final_project_admin_new" />
+    <style name="Theme.YourApp" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Add these attributes -->
+        <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigationView</item>
+    </style>
+
+    <style name="Widget.App.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.BottomNavigationView</item>
+    </style>
+
+    <style name="ThemeOverlay.App.BottomNavigationView" parent="">
+        <item name="colorPrimary">@color/brown</item>
+        <item name="colorSecondary">@color/black</item>
+    </style>
 </resources>

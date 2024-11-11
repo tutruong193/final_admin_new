@@ -111,15 +111,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return yogaClassList;
     }
+
     public void deleteYogaClass(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_YOGA_CLASS, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});
     }
+
     public Cursor getClassDetails(int classId) {
         SQLiteDatabase db = this.getReadableDatabase();
         String query = "SELECT * FROM " + TABLE_YOGA_CLASS + " WHERE " + COLUMN_ID + " = ?";
         return db.rawQuery(query, new String[]{String.valueOf(classId)});
     }
+
+
     public boolean updateClassDetails(int classId, String dayOfWeek, String time, int capacity, int duration, double price, String classType, String description) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -137,23 +141,79 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     //class Instance
-    public void addClassInstance(ClassInstance classInstance) {
+    public boolean addClassInstance(ClassInstance classInstance, Context context) {
         SQLiteDatabase db = this.getWritableDatabase();
+
+        // Kiểm tra xem có class instance nào cùng class_id và instance_date chưa
+        Cursor cursor = db.query(
+                TABLE_CLASS_INSTANCE,
+                null,
+                COLUMN_CLASS_ID + " = ? AND " + COLUMN_INSTANCE_DATE + " = ?",
+                new String[]{String.valueOf(classInstance.getClassId()), classInstance.getDate()},
+                null, null, null
+        );
+
+        if (cursor.getCount() > 0) {
+            // Nếu đã tồn tại, thông báo trùng lặp
+            Toast.makeText(context, "Instance với ngày này đã tồn tại!", Toast.LENGTH_SHORT).show();
+            cursor.close();
+            db.close();
+            return false;
+        } else {
+            // Nếu chưa tồn tại, thêm mới
+            ContentValues values = new ContentValues();
+            values.put(COLUMN_CLASS_ID, classInstance.getClassId());
+            values.put(COLUMN_INSTANCE_DATE, classInstance.getDate());
+            values.put(COLUMN_INSTANCE_TEACHER, classInstance.getTeacher());
+            values.put(COLUMN_INSTANCE_COMMENTS, classInstance.getComments());
+
+            db.insert(TABLE_CLASS_INSTANCE, null, values);
+            Toast.makeText(context, "Instance đã được thêm thành công!", Toast.LENGTH_SHORT).show();
+            cursor.close();
+            db.close();
+            return true;
+        }
+
+    }
+    public boolean updateInstanceDetail(int classId, String date, String teacher, String comments, Context context) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String query = "SELECT * FROM " + TABLE_CLASS_INSTANCE + " WHERE " + COLUMN_INSTANCE_DATE + " = ? AND " + COLUMN_INSTANCE_ID + " != ?";
+        Cursor cursor = db.rawQuery(query, new String[]{date, String.valueOf(classId)});
+
+        if (cursor != null && cursor.moveToFirst()) {
+            cursor.close();
+            Toast.makeText(context, "Instance với ngày này đã tồn tại!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
         ContentValues values = new ContentValues();
-        values.put(COLUMN_CLASS_ID, classInstance.getClassId());
-        values.put(COLUMN_INSTANCE_DATE, classInstance.getDate());
-        values.put(COLUMN_INSTANCE_TEACHER, classInstance.getTeacher());
-        values.put(COLUMN_INSTANCE_COMMENTS, classInstance.getComments());
-        db.insert(TABLE_CLASS_INSTANCE, null, values);
-        db.close();
+        values.put(COLUMN_INSTANCE_DATE, date);
+        values.put(COLUMN_INSTANCE_TEACHER, teacher);
+        values.put(COLUMN_INSTANCE_COMMENTS, comments);
+
+        int rowsUpdated = db.update(TABLE_CLASS_INSTANCE, values, COLUMN_INSTANCE_ID + " = ?", new String[]{String.valueOf(classId)});
+
+        cursor.close();  // Đóng cursor khi hoàn thành
+
+        return rowsUpdated > 0;  // Trả về true nếu có bản ghi được cập nhật
     }
 
+
     // Lấy tất cả các class instance của một yoga class
-    public List<ClassInstance> getClassInstances() {
+    public List<ClassInstance> getClassInstancesByClassId(int classId) {
         List<ClassInstance> classInstanceList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_CLASS_INSTANCE, null, null, null, null, null, null);
 
+        // Thực hiện truy vấn lọc các ClassInstance theo classId
+        Cursor cursor = db.query(
+                TABLE_CLASS_INSTANCE,  // Tên bảng chứa các instance
+                null,                  // Lấy tất cả các cột
+                COLUMN_CLASS_ID + " = ?",  // Điều kiện lọc: chỉ lấy các bản ghi có classId = ?
+                new String[]{String.valueOf(classId)},  // Truyền giá trị classId vào câu truy vấn
+                null, null, null       // Không cần nhóm hay sắp xếp
+        );
+
+        // Kiểm tra nếu có dữ liệu trả về
         if (cursor.moveToFirst()) {
             do {
                 ClassInstance instance = new ClassInstance(
@@ -170,6 +230,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return classInstanceList;
     }
 
+    public Cursor getInstaceDetail(int classId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE_CLASS_INSTANCE + " WHERE " + COLUMN_INSTANCE_ID + " = ?";
+        return db.rawQuery(query, new String[]{String.valueOf(classId)});
+    }
 
     // Xóa một class instance
     public void deleteClassInstance(int instanceId) {
