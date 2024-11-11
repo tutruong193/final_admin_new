@@ -3,6 +3,7 @@ package com.example.final_project_admin_new;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,6 +12,9 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.final_project_admin_new.yogaclass.MainActivity;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class SplashAcitivity extends AppCompatActivity {
 
@@ -18,6 +22,12 @@ public class SplashAcitivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+        FirebaseApp.initializeApp(this);
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("message");
+
+        myRef.setValue("Hello, World!");
         setContentView(R.layout.activity_splash_acitivity);
         View loadingImage = findViewById(R.id.loadingImage);
         View loginForm = findViewById(R.id.loginForm);

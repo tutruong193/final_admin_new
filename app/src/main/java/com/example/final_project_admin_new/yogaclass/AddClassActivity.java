@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
@@ -25,27 +26,21 @@ import java.util.Calendar;
 
 public class AddClassActivity extends AppCompatActivity {
 
-    EditText description, price, duration, capacity, timeCourse;
-    TextView timeTextView;
+    EditText description, price, duration, capacity;
+    TextView timeCourse;
     Button addClassBtn, btnBack;
     DatabaseHelper DB;
     private boolean isPickedTime;
-    AutoCompleteTextView dayOfWeek, classType;
+
+    Spinner classType, dayOfWeek;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_add_class_acitivity);
 
-        // Áp dụng hệ thống padding tự động cho các thanh điều hướng
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-
         // Khởi tạo các view
-        addClassBtn = findViewById(R.id._addClassBtn);
+        addClassBtn = findViewById(R.id.btnAdd);
         classType = findViewById(R.id.typeOfClass);
         price = findViewById(R.id.inputPrice);
         duration = findViewById(R.id.inputDuration);
@@ -80,12 +75,12 @@ public class AddClassActivity extends AppCompatActivity {
                     .setMessage("Are you sure you want to add this yoga class?")
                     .setPositiveButton("Yes", (dialog, which) -> {
                         // Lấy dữ liệu từ form
-                        String selectedDay = dayOfWeek.getText().toString();
+                        String selectedDay = dayOfWeek.getSelectedItem().toString();
                         String timeOfCourse = timeCourse.getText().toString();
                         int _capacity = Integer.parseInt(capacity.getText().toString());
                         int _duration = Integer.parseInt(duration.getText().toString());
                         double _price = Double.parseDouble(price.getText().toString());
-                        String _classType = classType.getText().toString();
+                        String _classType = classType.getSelectedItem().toString();
                         String _description = description.getText().toString();
 
                         // Tạo đối tượng YogaClass
@@ -117,7 +112,7 @@ public class AddClassActivity extends AppCompatActivity {
     }
 
     // Hàm khởi tạo dropdown cho ngày trong tuần và loại lớp
-    private void setupDropdown(AutoCompleteTextView dropdown, int arrayResourceId) {
+    private void setupDropdown(Spinner dropdown, int arrayResourceId) {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 arrayResourceId, android.R.layout.simple_dropdown_item_1line);
         dropdown.setAdapter(adapter);
@@ -157,10 +152,10 @@ public class AddClassActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(price.getText().toString())) {
             missingFields.append("Price, ");
         }
-        if (TextUtils.isEmpty(dayOfWeek.getText().toString())) {
+        if (TextUtils.isEmpty(dayOfWeek.getSelectedItem().toString())) {
             missingFields.append("Day of Week, ");
         }
-        if (TextUtils.isEmpty(classType.getText().toString())) {
+        if (TextUtils.isEmpty(classType.getSelectedItem().toString())) {
             missingFields.append("Class Type, ");
         }
         if (TextUtils.isEmpty(timeCourse.getText().toString())) {
