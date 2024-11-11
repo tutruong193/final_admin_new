@@ -49,7 +49,6 @@ public class ClassInstanceAdapter extends RecyclerView.Adapter<ClassInstanceAdap
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         // Get the ClassInstance object at the current position
         ClassInstance classInstance = classInstanceList.get(position);
-
         // Bind data to the views
         holder.dateTextView.setText(classInstance.getDate());
         holder.teacherTextView.setText("Teacher: " + classInstance.getTeacher());
@@ -57,7 +56,7 @@ public class ClassInstanceAdapter extends RecyclerView.Adapter<ClassInstanceAdap
         holder.btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDeleteDialog(position);
+                showDeleteDialog(holder.getAdapterPosition());
             }
         });
         holder.editButton.setOnClickListener(new View.OnClickListener() {
@@ -100,6 +99,10 @@ public class ClassInstanceAdapter extends RecyclerView.Adapter<ClassInstanceAdap
     public int getItemCount() {
         // Return the size of the list
         return classInstanceList.size();
+    }
+    public void setClassInstances(List<ClassInstance> classInstances) {
+        this.classInstanceList = classInstances;
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

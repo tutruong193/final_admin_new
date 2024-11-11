@@ -242,5 +242,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.delete(TABLE_CLASS_INSTANCE, COLUMN_INSTANCE_ID + " = ?", new String[]{String.valueOf(instanceId)});
         db.close();
     }
+    public Cursor searchClassesByTeacher(String teacherName) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        // Sử dụng tên bảng và cột từ hằng số để tránh lỗi đánh máy
+        String query = "SELECT * FROM " + TABLE_CLASS_INSTANCE + " WHERE " + COLUMN_INSTANCE_TEACHER + " LIKE ?";
+        return db.rawQuery(query, new String[]{"%" + teacherName + "%"});
+    }
+
 }
 

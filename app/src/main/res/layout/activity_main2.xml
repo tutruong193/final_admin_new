@@ -82,39 +82,24 @@
             <!-- Search Bar Section -->
 
             <!-- RecyclerView -->
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/searchBar"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/searchLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp">
+                android:layout_marginTop="16dp"
+                android:hint="Search classes"
+                app:endIconMode="clear_text"
+                app:startIconDrawable="@drawable/baseline_search_24"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
-                <EditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/searchInput"
-                    android:layout_width="330dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/shape_drawable"
-                    android:hint="Class name"
-                    android:padding="8dp"
-                    android:textSize="16sp"
-                    app:layout_constraintEnd_toStartOf="@+id/searchBtn"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintWidth_percent="0.7" />
+                    android:inputType="text"
+                    android:maxLines="1" />
 
-                <TextView
-                    android:id="@+id/searchBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/shape"
-                    android:drawableLeft="@drawable/search_icon"
-                    android:drawableTint="@color/white"
-                    android:padding="8dp"
-                    app:layout_constraintBottom_toBottomOf="@id/searchInput"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/searchInput"
-                    app:layout_constraintTop_toTopOf="@id/searchInput" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerview"

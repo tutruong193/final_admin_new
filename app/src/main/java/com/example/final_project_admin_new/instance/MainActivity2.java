@@ -3,7 +3,10 @@ package com.example.final_project_admin_new.instance;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -19,7 +22,9 @@ import com.example.final_project_admin_new.model.ClassInstance;
 import com.example.final_project_admin_new.model.YogaClass;
 import com.example.final_project_admin_new.yogaclass.MainActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity2 extends AppCompatActivity {
@@ -30,7 +35,8 @@ public class MainActivity2 extends AppCompatActivity {
     private FloatingActionButton btnAdd;
     private LinearLayout backToYogaClassesLayout;
     private int classId;
-    private TextView yogaClassTitle,yogaClassDetails;
+    private TextView yogaClassTitle,yogaClassDetails, searchBtn;
+    private TextInputEditText searchInput;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +45,7 @@ public class MainActivity2 extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        searchInput = findViewById(R.id.searchInput);
         btnAdd = findViewById(R.id.btnAdd);  // Correct casting
         backToYogaClassesLayout = findViewById(R.id.backToYogaClassesLayout);
 
@@ -87,6 +94,25 @@ public class MainActivity2 extends AppCompatActivity {
             }
         });
 
+        searchInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                // Không cần xử lý ở đây
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                // Khi có thay đổi văn bản, thực hiện tìm kiếm
+                String teacherName = charSequence.toString().trim();
+                performSearch(teacherName);  // Gọi hàm tìm kiếm
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                // Không cần xử lý ở đây
+            }
+        });
+
     }
     @Override
     protected void onResume() {
@@ -98,4 +124,27 @@ public class MainActivity2 extends AppCompatActivity {
         classInstanceList = dbHelper.getClassInstancesByClassId(classId);
         classInstanceAdapter.notifyDataSetChanged();  // Cập nhật lại RecyclerView
     }
+    private void performSearch(String teacherName) {
+        Cursor cursor = dbHelper.searchClassesByTeacher(teacherName);
+        List<ClassInstance> searchResults = new ArrayList<>(); // Tạo danh sách tạm để chứa kết quả tìm kiếm
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                // Tạo đối tượng ClassInstance từ dữ liệu trong Cursor
+                String date = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_INSTANCE_DATE));
+                String teacher = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_INSTANCE_TEACHER));
+                String comment = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_INSTANCE_COMMENTS));
+                int yogaclassId = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_CLASS_ID));
+
+                // Thêm vào danh sách kết quả
+                ClassInstance classInstance = new ClassInstance(date, teacher, comment, yogaclassId);
+                searchResults.add(classInstance);
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+
+        // Cập nhật Adapter với dữ liệu mới
+        classInstanceAdapter.setClassInstances(searchResults);
+    }
+
 }
