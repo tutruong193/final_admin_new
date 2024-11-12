@@ -40,16 +40,14 @@ public class ClassInstanceAdapter extends RecyclerView.Adapter<ClassInstanceAdap
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Inflate layout for each item
         View view = LayoutInflater.from(context).inflate(R.layout.class_instance_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        // Get the ClassInstance object at the current position
         ClassInstance classInstance = classInstanceList.get(position);
-        // Bind data to the views
+
         holder.dateTextView.setText(classInstance.getDate());
         holder.teacherTextView.setText("Teacher: " + classInstance.getTeacher());
         holder.commentsTextView.setText("Comment: " + (classInstance.getComments() != null && !classInstance.getComments().isEmpty() ? classInstance.getComments() : "None"));
@@ -81,11 +79,8 @@ public class ClassInstanceAdapter extends RecyclerView.Adapter<ClassInstanceAdap
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // Get the class to be deleted
                 ClassInstance classInstanceDelete = classInstanceList.get(position);
-
-                // Delete from the database
-                databaseHelper.deleteClassInstance(classInstanceDelete.getId()); // Assuming there's a deleteYogaClass method in your database helper
+                databaseHelper.deleteClassInstance(classInstanceDelete.getId());
                 classInstanceList.remove(position);
                 notifyItemRemoved(position);
                 Toast.makeText(context, "Class deleted successfully", Toast.LENGTH_SHORT).show();
@@ -116,7 +111,6 @@ public class ClassInstanceAdapter extends RecyclerView.Adapter<ClassInstanceAdap
             super(itemView);
             btnDelete = itemView.findViewById(R.id.deleteButton);
             editButton = itemView.findViewById(R.id.editButton);
-            // Initialize the views from the item layout
             dateTextView = itemView.findViewById(R.id.dateTextView);
             teacherTextView = itemView.findViewById(R.id.teacherTextView);
             commentsTextView = itemView.findViewById(R.id.commentsTextView);

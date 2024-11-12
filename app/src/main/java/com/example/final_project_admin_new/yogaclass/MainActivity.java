@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,11 +31,12 @@ public class MainActivity extends AppCompatActivity {
     private List<YogaClass> yogaClassList;
     private DatabaseHelper dbHelper;
     private FloatingActionButton btnAdd;
+    private TextView noDataText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        FirebaseApp.initializeApp(this);
         // Khởi tạo RecyclerView
         recyclerView = findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -49,7 +52,14 @@ public class MainActivity extends AppCompatActivity {
         // Khởi tạo Adapter với dữ liệu
         yogaClassAdapter = new YogaClassAdapter(this, yogaClassList, dbHelper);
         recyclerView.setAdapter(yogaClassAdapter);
-
+        noDataText = findViewById(R.id.noDataText);
+        if (yogaClassList.isEmpty()) {
+            noDataText.setVisibility(View.VISIBLE); // Hiển thị thông báo "No data"
+            recyclerView.setVisibility(View.GONE); // Ẩn RecyclerView
+        } else {
+            noDataText.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
         // Thêm một lớp yoga mới
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override

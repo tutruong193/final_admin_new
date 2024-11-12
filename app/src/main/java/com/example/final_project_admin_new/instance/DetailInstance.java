@@ -90,7 +90,7 @@ public class DetailInstance extends AppCompatActivity {
 
         // Kiểm tra xem tất cả các trường nhập liệu có hợp lệ hay không
         if (date.isEmpty() || teacher.isEmpty()) {
-            Toast.makeText(this, "Vui lòng điền đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please fill in all required fields.", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -98,13 +98,13 @@ public class DetailInstance extends AppCompatActivity {
         boolean isUpdated = dbHelper.updateInstanceDetail(classId, date, teacher, comments, this);
 
         if (isUpdated) {
-            Toast.makeText(this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Updated successfully", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, MainActivity2.class);
             intent.putExtra("CLASS_ID", yogaclassId);
             startActivity(intent);
            // Quay lại trang trước sau khi cập nhật thành công
         } else {
-            Toast.makeText(this, "Cập nhật thất bại", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Updated fail", Toast.LENGTH_SHORT).show();
         }
     }
     private void loadInstanceDetail(int instanceId) {
@@ -135,7 +135,7 @@ public class DetailInstance extends AppCompatActivity {
             cursor.close();  // Đóng cursor khi hoàn thành
         } else {
             // Nếu không thể lấy dữ liệu
-            Toast.makeText(this, "Không thể tải thông tin instance", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Cannot load the data", Toast.LENGTH_SHORT).show();
         }
     }
     private void setupDatePickerWithDayOfWeek(String dayOfWeek) {

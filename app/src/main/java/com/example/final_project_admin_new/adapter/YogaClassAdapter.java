@@ -63,9 +63,9 @@ public class YogaClassAdapter extends RecyclerView.Adapter<YogaClassAdapter.View
             public void onClick(View v) {
                 int pos = holder.getAdapterPosition();
                 if (pos != RecyclerView.NO_POSITION) {
-                    YogaClass yogaClass = yogaClassList.get(pos);  // Lấy lớp Yoga ở vị trí hiện tại
-                    Intent intent = new Intent(context, MainActivity2.class);  // Chuyển tới ClassInstanceActivity
-                    intent.putExtra("CLASS_ID", yogaClass.getId());  // Truyền ID lớp yoga
+                    YogaClass yogaClass = yogaClassList.get(pos);
+                    Intent intent = new Intent(context, MainActivity2.class);
+                    intent.putExtra("CLASS_ID", yogaClass.getId());
                     context.startActivity(intent);
                 }
             }
@@ -74,9 +74,9 @@ public class YogaClassAdapter extends RecyclerView.Adapter<YogaClassAdapter.View
             public void onClick(View v) {
                 int pos = holder.getAdapterPosition();
                 if (pos != RecyclerView.NO_POSITION) {
-                    YogaClass yogaClass = yogaClassList.get(pos);  // Get the YogaClass at the current position
+                    YogaClass yogaClass = yogaClassList.get(pos);
                     Intent intent = new Intent(context, DetailActivity.class);
-                    intent.putExtra("CLASS_ID", yogaClass.getId());  // Pass the class ID
+                    intent.putExtra("CLASS_ID", yogaClass.getId());
                     context.startActivity(intent);
                 }
             }
@@ -90,11 +90,8 @@ public class YogaClassAdapter extends RecyclerView.Adapter<YogaClassAdapter.View
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // Get the class to be deleted
                 YogaClass yogaClassToDelete = yogaClassList.get(position);
-
-                // Delete from the database
-                databaseHelper.deleteYogaClass(yogaClassToDelete.getId(), context); // Assuming there's a deleteYogaClass method in your database helper
+                databaseHelper.deleteYogaClass(yogaClassToDelete.getId(), context);
                 yogaClassList.remove(position);
                 notifyItemRemoved(position);
                 Toast.makeText(context, "Class deleted successfully", Toast.LENGTH_SHORT).show();

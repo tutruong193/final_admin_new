@@ -2,13 +2,13 @@ package com.example.final_project_admin_new.model;
 
 public class ClassInstance {
 
-    private int id;           // ID của instance
-    private String date;      // Ngày lớp học
-    private String teacher;   // Tên giáo viên
-    private String comments;  // Bình luận thêm
-    private int classId;      // ID của lớp YogaClass mà instance này liên kết đến
+    private int id;
+    private String date;
+    private String teacher;
+    private String comments;
+    private int classId;
 
-    // Constructor
+
     public ClassInstance(String date, String teacher, String comments, int classId) {
         this.date = date;
         this.teacher = teacher;
@@ -22,7 +22,7 @@ public class ClassInstance {
         this.classId = classId;
         this.id = id;
     }
-    // Getter và Setter cho các thuộc tính
+
     public int getId() {
         return id;
     }

@@ -38,24 +38,5 @@ public class YogaClass {
     public void setClassType(String classType) { this.classType = classType; }
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
-    @Override
-    public String toString() {
-        StringBuilder result = new StringBuilder();
-        result.append("Loại lớp: ").append(classType).append("\n")
-                .append("Id: ").append(id).append("\n")
-                .append("Ngày: ").append(dayOfWeek).append("\n")
-                .append("Thời gian: ").append(time).append("\n")
-                .append("Sức chứa: ").append(capacity).append("\n")
-                .append("Thời lượng: ").append(duration).append(" phút\n")
-                .append("Giá: ").append(price).append(" VND\n");
-
-        if (description != null && !description.isEmpty()) {
-            result.append("Mô tả: ").append(description).append("\n");
-        }
-
-        return result.toString();
-    }
-
-
 }
 

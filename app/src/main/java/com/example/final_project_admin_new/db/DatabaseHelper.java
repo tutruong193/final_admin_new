@@ -159,14 +159,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.query(
                 TABLE_CLASS_INSTANCE,
                 null,
-                COLUMN_CLASS_ID + " = ? AND " + COLUMN_INSTANCE_DATE + " = ?",
-                new String[]{String.valueOf(classInstance.getClassId()), classInstance.getDate()},
+                COLUMN_CLASS_ID + " = ? AND " + COLUMN_INSTANCE_DATE + " = ? AND " + COLUMN_INSTANCE_TEACHER + " = ?",
+                new String[]{
+                        String.valueOf(classInstance.getClassId()),
+                        classInstance.getDate(),
+                        classInstance.getTeacher()
+                },
                 null, null, null
         );
 
         if (cursor.getCount() > 0) {
             // Nếu đã tồn tại, thông báo trùng lặp
-            Toast.makeText(context, "Instance với ngày này đã tồn tại!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "The teacher has been assigned to another instance at this time.", Toast.LENGTH_SHORT).show();
             cursor.close();
             db.close();
             return false;
@@ -177,9 +181,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             values.put(COLUMN_INSTANCE_DATE, classInstance.getDate());
             values.put(COLUMN_INSTANCE_TEACHER, classInstance.getTeacher());
             values.put(COLUMN_INSTANCE_COMMENTS, classInstance.getComments());
-
             db.insert(TABLE_CLASS_INSTANCE, null, values);
-            Toast.makeText(context, "Instance đã được thêm thành công!", Toast.LENGTH_SHORT).show();
             cursor.close();
             db.close();
             return true;
@@ -189,12 +191,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public boolean updateInstanceDetail(int classId, String date, String teacher, String comments, Context context) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        String query = "SELECT * FROM " + TABLE_CLASS_INSTANCE + " WHERE " + COLUMN_INSTANCE_DATE + " = ? AND " + COLUMN_INSTANCE_ID + " != ?";
-        Cursor cursor = db.rawQuery(query, new String[]{date, String.valueOf(classId)});
+        String query = "SELECT * FROM " + TABLE_CLASS_INSTANCE +
+                " WHERE " + COLUMN_INSTANCE_TEACHER + " = ? AND " +
+                COLUMN_INSTANCE_DATE + " = ? AND " +
+                COLUMN_INSTANCE_ID + " != ?";
+        Cursor cursor = db.rawQuery(query, new String[]{teacher, date, String.valueOf(classId)});
+
 
         if (cursor != null && cursor.moveToFirst()) {
             cursor.close();
-            Toast.makeText(context, "Instance với ngày này đã tồn tại!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "The teacher has been assigned to another instance at this time.", Toast.LENGTH_SHORT).show();
             return false;
         }
         ContentValues values = new ContentValues();

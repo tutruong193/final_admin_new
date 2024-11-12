@@ -108,15 +108,13 @@ public class AddClassInstance extends AppCompatActivity {
         // Thêm ClassInstance vào cơ sở dữ liệu
         boolean isAdd = dbHelper.addClassInstance(newInstance, this);
         if (isAdd) {
-            Toast.makeText(this, "Class instance saved successfully.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Class instance added successfully.", Toast.LENGTH_SHORT).show();
 
             // Chuyển về màn hình chính (MainActivity2)
             Intent intent = new Intent(AddClassInstance.this, MainActivity2.class);
             intent.putExtra("CLASS_ID", classId);  // Truyền classId
             startActivity(intent);
             finish();
-        } else {
-            Toast.makeText(this, "Failed to save class instance.", Toast.LENGTH_SHORT).show();
         }
     }
 

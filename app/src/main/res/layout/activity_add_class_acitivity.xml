@@ -59,7 +59,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="Capacity">
+            android:hint="Capacity (number)">
 
             <EditText
                 android:id="@+id/inputCapacity"
@@ -76,7 +76,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="Duration">
+            android:hint="Duration (minutes)">
 
             <EditText
                 android:id="@+id/inputDuration"
@@ -93,7 +93,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="Price per Class">
+            android:hint="Price per Class ($)">
 
             <EditText
                 android:id="@+id/inputPrice"
