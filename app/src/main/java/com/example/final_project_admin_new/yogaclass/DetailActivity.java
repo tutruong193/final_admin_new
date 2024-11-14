@@ -100,7 +100,7 @@ public class DetailActivity extends AppCompatActivity {
                 .setTitle("Confirm Add Class")
                 .setMessage("Are you sure you want to add this yoga class?\n\n" + confirmationMessage)
                 .setPositiveButton("Yes", (dialog, which) -> {
-                    boolean isUpdated = DB.updateClassDetails(classId, dayOfWeek, classTime, capacity, duration, price, classType, description);
+                    boolean isUpdated = DB.updateClassDetails(classId, dayOfWeek, classTime, capacity, duration, price, classType, description, this);
                     if (isUpdated) {
                         Toast.makeText(this, "Class updated successfully", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(DetailActivity.this, MainActivity.class);

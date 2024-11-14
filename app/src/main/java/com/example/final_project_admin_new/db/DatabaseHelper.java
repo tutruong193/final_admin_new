@@ -9,21 +9,26 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import com.example.final_project_admin_new.model.ClassInstance;
 import com.example.final_project_admin_new.model.YogaClass;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private DatabaseReference mDatabase;
-
     private static final String DATABASE_NAME = "YogaClassDB";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 3;
     //yoga class
     public static final String TABLE_YOGA_CLASS = "yoga_class";
     public static final String COLUMN_ID = "id";
@@ -43,7 +48,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_INSTANCE_DATE = "instance_date";
     public static final String COLUMN_INSTANCE_TEACHER = "teacher";
     public static final String COLUMN_INSTANCE_COMMENTS = "comments";
-
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -80,9 +84,76 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CLASS_INSTANCE);
         onCreate(db);
     }
+    public void getDataFromFireBaseToSQL(){
+        mDatabase.child("class_instances").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                SQLiteDatabase db = getWritableDatabase();
+                db.beginTransaction();
+                try {
+                    // Xóa tất cả dữ liệu cũ trong bảng yoga_class
+                    db.delete(TABLE_CLASS_INSTANCE, null, null);
+                    for (DataSnapshot snap : snapshot.getChildren()) {
+                        ClassInstance classInstance = snap.getValue(ClassInstance.class);
+                        if (classInstance != null) {
+                            ContentValues values = new ContentValues();
+                            values.put(COLUMN_INSTANCE_ID, classInstance.getId());
+                            values.put(COLUMN_CLASS_ID, classInstance.getClassId()); // Liên kết với yoga class
+                            values.put(COLUMN_INSTANCE_DATE, classInstance.getDate());
+                            values.put(COLUMN_INSTANCE_TEACHER, classInstance.getTeacher());
+                            values.put(COLUMN_INSTANCE_COMMENTS, classInstance.getComments());
+                            db.insert(TABLE_CLASS_INSTANCE, null, values);
+                        }
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                    db.close();
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        mDatabase.child("yoga_classes").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                SQLiteDatabase db = getWritableDatabase();
+                db.beginTransaction();
+                try {
+                    // Xóa tất cả dữ liệu cũ trong bảng yoga_class
+                    db.delete(TABLE_YOGA_CLASS, null, null);
+                    for (DataSnapshot snap : snapshot.getChildren()) {
+                        YogaClass yogaClass = snap.getValue(YogaClass.class);
+                        if (yogaClass != null) {
+                            ContentValues values = new ContentValues();
+                            values.put(COLUMN_ID, yogaClass.getId());
+                            values.put(COLUMN_DAY_OF_WEEK, yogaClass.getDayOfWeek());
+                            values.put(COLUMN_TIME, yogaClass.getTime());
+                            values.put(COLUMN_CAPACITY, yogaClass.getCapacity());
+                            values.put(COLUMN_DURATION, yogaClass.getDuration());
+                            values.put(COLUMN_PRICE, yogaClass.getPrice());
+                            values.put(COLUMN_CLASS_TYPE, yogaClass.getClassType());
+                            values.put(COLUMN_DESCRIPTION, yogaClass.getDescription());
+                            db.insert(TABLE_YOGA_CLASS, null, values);
+                        }
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                    db.close();
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 
     // yoga class
-    public void addYogaClass(YogaClass yogaClass,  Context context) {
+    public void addYogaClass(YogaClass yogaClass, Context context) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_DAY_OF_WEEK, yogaClass.getDayOfWeek());
@@ -92,15 +163,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_PRICE, yogaClass.getPrice());
         values.put(COLUMN_CLASS_TYPE, yogaClass.getClassType());
         values.put(COLUMN_DESCRIPTION, yogaClass.getDescription());
-        db.insert(TABLE_YOGA_CLASS, null, values);
-        db.close();
+        long id = db.insert(TABLE_YOGA_CLASS, null, values);
+        if (checkInternetConnection(context)) {
+            yogaClass.setId((int) id);
+            mDatabase.child("yoga_classes").child(String.valueOf(id)).setValue(yogaClass);
+        }
     }
 
     public List<YogaClass> getAllYogaClasses() {
         ArrayList<YogaClass> yogaClassList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_YOGA_CLASS, null, null, null, null, null, null);
-
         if (cursor.moveToFirst()) {
             do {
                 YogaClass yogaClass = new YogaClass(
@@ -119,23 +192,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return yogaClassList;
     }
-
     public void deleteYogaClass(int id, Context context) {
         SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_CLASS_INSTANCE, COLUMN_CLASS_ID + " = ?", new String[]{String.valueOf(id)});
         db.delete(TABLE_YOGA_CLASS, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});
         if (checkInternetConnection(context)) {
             mDatabase.child("yoga_classes").child(String.valueOf(id)).removeValue();
+            mDatabase.child("class_instances").orderByChild(COLUMN_CLASS_ID).equalTo(id)
+                    .getRef().removeValue();
         }
     }
-
     public Cursor getClassDetails(int classId) {
         SQLiteDatabase db = this.getReadableDatabase();
         String query = "SELECT * FROM " + TABLE_YOGA_CLASS + " WHERE " + COLUMN_ID + " = ?";
         return db.rawQuery(query, new String[]{String.valueOf(classId)});
     }
 
-
-    public boolean updateClassDetails(int classId, String dayOfWeek, String time, int capacity, int duration, double price, String classType, String description) {
+    public boolean updateClassDetails(int classId, String dayOfWeek, String time, int capacity, int duration, double price, String classType, String description, Context context) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_DAY_OF_WEEK, dayOfWeek);
@@ -147,15 +220,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_DESCRIPTION, description);
 
         int rowsUpdated = db.update(TABLE_YOGA_CLASS, values, COLUMN_ID + " = ?", new String[]{String.valueOf(classId)});
+
+        if (rowsUpdated > 0 && checkInternetConnection(context)) {
+            YogaClass yogaClass = new YogaClass(dayOfWeek, time, capacity, duration, price, classType, description);
+            yogaClass.setId(classId);
+            mDatabase.child("yoga_classes").child(String.valueOf(classId)).setValue(yogaClass);
+        }
         return rowsUpdated > 0;
     }
-
 
     //class Instance
     public boolean addClassInstance(ClassInstance classInstance, Context context) {
         SQLiteDatabase db = this.getWritableDatabase();
-
-        // Kiểm tra xem có class instance nào cùng class_id và instance_date chưa
         Cursor cursor = db.query(
                 TABLE_CLASS_INSTANCE,
                 null,
@@ -169,26 +245,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         );
 
         if (cursor.getCount() > 0) {
-            // Nếu đã tồn tại, thông báo trùng lặp
             Toast.makeText(context, "The teacher has been assigned to another instance at this time.", Toast.LENGTH_SHORT).show();
             cursor.close();
-            db.close();
             return false;
         } else {
-            // Nếu chưa tồn tại, thêm mới
             ContentValues values = new ContentValues();
             values.put(COLUMN_CLASS_ID, classInstance.getClassId());
             values.put(COLUMN_INSTANCE_DATE, classInstance.getDate());
             values.put(COLUMN_INSTANCE_TEACHER, classInstance.getTeacher());
             values.put(COLUMN_INSTANCE_COMMENTS, classInstance.getComments());
-            db.insert(TABLE_CLASS_INSTANCE, null, values);
+            long id = db.insert(TABLE_CLASS_INSTANCE, null, values);
             cursor.close();
-            db.close();
+            if (checkInternetConnection(context)) {
+                classInstance.setId((int) id);
+                mDatabase.child("class_instances").child(String.valueOf(id)).setValue(classInstance);
+            }
             return true;
         }
 
     }
-    public boolean updateInstanceDetail(int classId, String date, String teacher, String comments, Context context) {
+    public boolean updateInstanceDetail(int classId, int yogaId, String date, String teacher, String comments, Context context) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         String query = "SELECT * FROM " + TABLE_CLASS_INSTANCE +
@@ -196,8 +272,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_INSTANCE_DATE + " = ? AND " +
                 COLUMN_INSTANCE_ID + " != ?";
         Cursor cursor = db.rawQuery(query, new String[]{teacher, date, String.valueOf(classId)});
-
-
         if (cursor != null && cursor.moveToFirst()) {
             cursor.close();
             Toast.makeText(context, "The teacher has been assigned to another instance at this time.", Toast.LENGTH_SHORT).show();
@@ -210,27 +284,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         int rowsUpdated = db.update(TABLE_CLASS_INSTANCE, values, COLUMN_INSTANCE_ID + " = ?", new String[]{String.valueOf(classId)});
 
-        cursor.close();  // Đóng cursor khi hoàn thành
-
-        return rowsUpdated > 0;  // Trả về true nếu có bản ghi được cập nhật
+        cursor.close();
+        if (rowsUpdated > 0 && checkInternetConnection(context)) {
+            ClassInstance classInstance = new ClassInstance(date, teacher, comments, yogaId);
+            classInstance.setId(classId);
+            mDatabase.child("class_instances").child(String.valueOf(classId)).setValue(classInstance);
+        }
+        return rowsUpdated > 0;
     }
-
-
-    // Lấy tất cả các class instance của một yoga class
     public List<ClassInstance> getClassInstancesByClassId(int classId) {
         List<ClassInstance> classInstanceList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-
-        // Thực hiện truy vấn lọc các ClassInstance theo classId
         Cursor cursor = db.query(
-                TABLE_CLASS_INSTANCE,  // Tên bảng chứa các instance
-                null,                  // Lấy tất cả các cột
-                COLUMN_CLASS_ID + " = ?",  // Điều kiện lọc: chỉ lấy các bản ghi có classId = ?
-                new String[]{String.valueOf(classId)},  // Truyền giá trị classId vào câu truy vấn
-                null, null, null       // Không cần nhóm hay sắp xếp
+                TABLE_CLASS_INSTANCE,
+                null,
+                COLUMN_CLASS_ID + " = ?",
+                new String[]{String.valueOf(classId)},
+                null, null, null
         );
 
-        // Kiểm tra nếu có dữ liệu trả về
         if (cursor.moveToFirst()) {
             do {
                 ClassInstance instance = new ClassInstance(
@@ -253,15 +325,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return db.rawQuery(query, new String[]{String.valueOf(classId)});
     }
 
-    // Xóa một class instance
-    public void deleteClassInstance(int instanceId) {
+    public void deleteClassInstance(int instanceId, Context context) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_CLASS_INSTANCE, COLUMN_INSTANCE_ID + " = ?", new String[]{String.valueOf(instanceId)});
-        db.close();
+        if (checkInternetConnection(context)) {
+            mDatabase.child("class_instances").child(String.valueOf(instanceId)).removeValue();
+        }
     }
+
     public Cursor searchClassesByTeacher(String teacherName) {
         SQLiteDatabase db = this.getReadableDatabase();
-        // Sử dụng tên bảng và cột từ hằng số để tránh lỗi đánh máy
         String query = "SELECT * FROM " + TABLE_CLASS_INSTANCE + " WHERE " + COLUMN_INSTANCE_TEACHER + " LIKE ?";
         return db.rawQuery(query, new String[]{"%" + teacherName + "%"});
     }
@@ -272,7 +345,5 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
-
-
 }
 

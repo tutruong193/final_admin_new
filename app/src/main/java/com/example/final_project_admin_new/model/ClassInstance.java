@@ -8,7 +8,8 @@ public class ClassInstance {
     private String comments;
     private int classId;
 
-
+    public ClassInstance() {
+    }
     public ClassInstance(String date, String teacher, String comments, int classId) {
         this.date = date;
         this.teacher = teacher;

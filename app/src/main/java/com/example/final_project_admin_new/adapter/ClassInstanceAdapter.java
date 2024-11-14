@@ -80,7 +80,7 @@ public class ClassInstanceAdapter extends RecyclerView.Adapter<ClassInstanceAdap
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 ClassInstance classInstanceDelete = classInstanceList.get(position);
-                databaseHelper.deleteClassInstance(classInstanceDelete.getId());
+                databaseHelper.deleteClassInstance(classInstanceDelete.getId(), context);
                 classInstanceList.remove(position);
                 notifyItemRemoved(position);
                 Toast.makeText(context, "Class deleted successfully", Toast.LENGTH_SHORT).show();

@@ -95,7 +95,7 @@ public class DetailInstance extends AppCompatActivity {
         }
 
         // Cập nhật thông tin instance vào cơ sở dữ liệu
-        boolean isUpdated = dbHelper.updateInstanceDetail(classId, date, teacher, comments, this);
+        boolean isUpdated = dbHelper.updateInstanceDetail(classId, yogaclassId, date, teacher, comments, this);
 
         if (isUpdated) {
             Toast.makeText(this, "Updated successfully", Toast.LENGTH_SHORT).show();

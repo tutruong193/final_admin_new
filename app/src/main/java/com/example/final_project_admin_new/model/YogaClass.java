@@ -20,7 +20,8 @@ public class YogaClass {
         this.classType = classType;
         this.description = description;
     }
-
+    public YogaClass() {
+    }
     // Getters và setters cho các trường
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }

@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.final_project_admin_new.db.DatabaseHelper;
 import com.example.final_project_admin_new.yogaclass.MainActivity;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseReference;
@@ -36,7 +37,8 @@ public class SplashAcitivity extends AppCompatActivity {
         EditText usernameEditText = findViewById(R.id.username);
         EditText passwordEditText = findViewById(R.id.password);
         Button loginButton = findViewById(R.id.loginButton);
-
+        DatabaseHelper db = new DatabaseHelper(this);
+        db.getDataFromFireBaseToSQL();
         new Handler().postDelayed(() -> {
             loadingImage.setVisibility(View.GONE);
             loginForm.setVisibility(View.VISIBLE);
@@ -45,19 +47,20 @@ public class SplashAcitivity extends AppCompatActivity {
         loginButton.setOnClickListener(view -> {
             String username = usernameEditText.getText().toString().trim();
             String password = passwordEditText.getText().toString().trim();
-            if (username.isEmpty() || password.isEmpty()) {
-                Toast.makeText(SplashAcitivity.this, "Enter information", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            if (username.equals("admin") && password.equals("admin")) {
-                Intent intent = new Intent(SplashAcitivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-                Toast.makeText(SplashAcitivity.this, "Login successfully", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(SplashAcitivity.this, "Username or password is not correct", Toast.LENGTH_SHORT).show();
-            }
+            Intent intent = new Intent(SplashAcitivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+//            if (username.isEmpty() || password.isEmpty()) {
+//                Toast.makeText(SplashAcitivity.this, "Enter information", Toast.LENGTH_SHORT).show();
+//                return;
+//            }
+//
+//            if (username.equals("admin") && password.equals("admin")) {
+//
+//                Toast.makeText(SplashAcitivity.this, "Login successfully", Toast.LENGTH_SHORT).show();
+//            } else {
+//                Toast.makeText(SplashAcitivity.this, "Username or password is not correct", Toast.LENGTH_SHORT).show();
+//            }
         });
     }
 }
