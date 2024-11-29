@@ -114,7 +114,7 @@ public class MainActivity2 extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 String teacherName = charSequence.toString().trim();
-                performSearch(teacherName);
+                performSearch(teacherName, classId);
             }
             @Override
             public void afterTextChanged(Editable editable) {
@@ -128,14 +128,12 @@ public class MainActivity2 extends AppCompatActivity {
         refreshData();
     }
     public void refreshData() {
-
         classInstanceList = dbHelper.getClassInstancesByClassId(classId);
         classInstanceAdapter.notifyDataSetChanged();
     }
-    private void performSearch(String teacherName) {
-        Cursor cursor = dbHelper.searchClassesByTeacher(teacherName);
+    private void performSearch(String teacherName, int classId) {
+        Cursor cursor = dbHelper.searchClassesByTeacher(teacherName, classId);
         List<ClassInstance> searchResults = new ArrayList<>();
-
         if (cursor != null && cursor.moveToFirst()) {
             do {
                 String date = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_INSTANCE_DATE));

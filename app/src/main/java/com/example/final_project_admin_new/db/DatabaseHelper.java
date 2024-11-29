@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.ConnectivityManager;
@@ -332,12 +333,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             mDatabase.child("class_instances").child(String.valueOf(instanceId)).removeValue();
         }
     }
-
-    public Cursor searchClassesByTeacher(String teacherName) {
+    public Cursor searchClassesByTeacher(String teacher, int yogaclassId) {
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT * FROM " + TABLE_CLASS_INSTANCE + " WHERE " + COLUMN_INSTANCE_TEACHER + " LIKE ?";
-        return db.rawQuery(query, new String[]{"%" + teacherName + "%"});
+
+        String query;
+        String[] params;
+
+        if (teacher == null || teacher.isEmpty()) {
+            query = "SELECT * FROM " + TABLE_CLASS_INSTANCE +
+                    " WHERE " + COLUMN_CLASS_ID + " = ?";
+            params = new String[]{String.valueOf(yogaclassId)};
+        } else {
+            query = "SELECT * FROM " + TABLE_CLASS_INSTANCE +
+                    " WHERE " + COLUMN_INSTANCE_TEACHER + " LIKE ? AND " + COLUMN_CLASS_ID + " = ?";
+            params = new String[]{"%" + teacher + "%", String.valueOf(yogaclassId)};
+        }
+
+        Log.d("Query", "Executing query: " + query);
+        Log.d("Params", "Teacher: " + teacher + ", YogaClassId: " + yogaclassId);
+
+        return db.rawQuery(query, params);
     }
+
+
 
     //check internet
     private boolean checkInternetConnection(Context context) {
